@@ -1,17 +1,13 @@
-# mysite
+# Numaan Qureshi - Web Portfolio
 
-A new Flutter project.
+My personal portfolio and resume built entirely with Flutter Web. This project serves as a digital showcase of my work and background.
 
-## Getting Started
+## Tech Stack
 
-This project is a starting point for a Flutter application.
+- Framework: Flutter (Web)
 
-A few resources to get you started if this is your first Flutter project:
+- Language: Dart
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+- Packages: google_fonts, url_launcher, flutter_svg, web_smooth_scroll
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Hosting: GitHub Pages
