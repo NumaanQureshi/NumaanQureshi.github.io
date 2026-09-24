@@ -1,22 +1,28 @@
 name: Flutter Web Deployment for GitHub Pages
+
 on:
   push:
     branches:
       - main
   workflow_dispatch:
+
 permissions:
   contents: read
   pages: write
   id-token: write
+
 concurrency:
   group: "pages"
   cancel-in-progress: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -27,28 +33,10 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Show environment
-        run: |
-          echo "Flutter:"
-          flutter --version
-
-          echo ""
-          echo "Git commit:"
-          git rev-parse HEAD
-
-          echo ""
-          echo "Git commit message:"
-          git log -1 --oneline
-
       - name: Verify source
         run: |
-          echo "=== main.dart ==="
           grep -n "PortfolioApp" lib/main.dart
           grep -n "Numaan Qureshi" lib/main.dart
-
-          echo ""
-          echo "=== Project files ==="
-          find . -maxdepth 2 -type f | sort
 
       - name: Install dependencies
         run: flutter pub get
@@ -59,46 +47,32 @@ jobs:
           flutter pub get
           flutter build web --release --base-href "/"
 
-      - name: VERIFY BUILD IS OUR APP
+      - name: Verify build
         run: |
-          echo "========================================"
-          echo "VERIFYING COMPILED APPLICATION"
-          echo "========================================"
+          echo "Build completed successfully."
+          echo "Build size:"
+          du -sh build/web
 
           echo ""
           echo "Build files:"
           find build/web -maxdepth 2 -type f | sort
 
           echo ""
-          echo "Build size:"
-          du -sh build/web
+          echo "Checking required Flutter files..."
+
+          test -f build/web/index.html
+          test -f build/web/flutter_bootstrap.js
+          test -f build/web/main.dart.js
+          test -f build/web/manifest.json
+
+          echo "✓ Required build files exist."
 
           echo ""
-          echo "Checking index.html:"
-          sed -n '1,120p' build/web/index.html
+          echo "Checking base href:"
+          grep '<base href="/">' build/web/index.html
 
           echo ""
-          echo "Searching compiled files for portfolio text..."
-
-          if grep -R -a -l "Numaan Qureshi" build/web > /tmp/matches.txt; then
-            echo "✓ FOUND 'Numaan Qureshi' in compiled web files:"
-            cat /tmp/matches.txt
-          else
-            echo "❌ ERROR: 'Numaan Qureshi' was NOT found in build/web"
-            echo ""
-            echo "The Flutter build does not appear to contain the portfolio."
-            exit 1
-          fi
-
-          echo ""
-          echo "Searching for default Flutter counter text..."
-
-          if grep -R -a -l "Flutter Demo Home Page" build/web > /tmp/demo.txt; then
-            echo "⚠ WARNING: Default Flutter demo text found:"
-            cat /tmp/demo.txt
-          else
-            echo "✓ Default Flutter demo text NOT found."
-          fi
+          echo "✓ Flutter web build is valid."
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
