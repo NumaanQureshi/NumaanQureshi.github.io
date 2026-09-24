@@ -2,7 +2,9 @@ name: Flutter Web Deployment for GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -10,27 +12,106 @@ permissions:
   id-token: write
 
 concurrency:
-  group: 'pages'
+  group: "pages"
   cancel-in-progress: true
 
 jobs:
   deploy:
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Debug Git information
+        run: |
+          echo "========================================"
+          echo "GitHub Actions Debug Information"
+          echo "========================================"
+          echo "Repository:"
+          git remote -v
+          echo ""
+          echo "Branch:"
+          git branch --show-current
+          echo ""
+          echo "Commit:"
+          git rev-parse HEAD
+          echo ""
+          echo "Commit details:"
+          git log -1 --oneline --decorate
+          echo ""
+          echo "Working tree:"
+          git status --short
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: stable
+          cache: true
 
-      - name: Build Web
-        run: flutter build web --base-href "/" --release
+      - name: Debug Flutter environment
+        run: |
+          echo "========================================"
+          echo "Flutter Environment"
+          echo "========================================"
+          flutter --version
+          dart --version
 
-      - name: Upload Pages Artifact
+      - name: Debug Flutter project
+        run: |
+          echo "========================================"
+          echo "Flutter Project"
+          echo "========================================"
+          echo ""
+          echo "Repository root:"
+          pwd
+          echo ""
+          echo "Root directory:"
+          ls -la
+          echo ""
+          echo "pubspec.yaml:"
+          sed -n '1,160p' pubspec.yaml
+          echo ""
+          echo "lib/main.dart:"
+          sed -n '1,240p' lib/main.dart
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Flutter Web
+        run: flutter build web --release --base-href "/"
+
+      - name: Debug build output
+        run: |
+          echo "========================================"
+          echo "Flutter Web Build Output"
+          echo "========================================"
+          echo ""
+          echo "build/web contents:"
+          find build/web -maxdepth 2 -type f | sort
+          echo ""
+          echo "Build directory size:"
+          du -sh build/web
+          echo ""
+          echo "index.html:"
+          sed -n '1,240p' build/web/index.html
+          echo ""
+          echo "Checking for Flutter bootstrap files:"
+          if [ -f "build/web/flutter_bootstrap.js" ]; then
+            echo "✓ flutter_bootstrap.js exists"
+          else
+            echo "⚠ flutter_bootstrap.js NOT found"
+          fi
+          if [ -d "build/web/assets" ]; then
+            echo "✓ assets directory exists"
+          else
+            echo "⚠ assets directory NOT found"
+          fi
+
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: build/web
