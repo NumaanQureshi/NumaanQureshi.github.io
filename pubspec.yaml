@@ -17,6 +17,7 @@ dependencies:
   google_fonts: ^8.2.1
   url_launcher: ^6.3.2
   flutter_svg: ^2.3.0
+  web_smooth_scroll: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -33,4 +34,4 @@ flutter:
   assets:
     - assets/images/
 
-  fonts:
+  # fonts:
