@@ -1,10 +1,9 @@
-name: Flutter Web Deployment for GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
-      - main
-  workflow_dispatch:
+      - main # Triggers the workflow every time you push to the main branch
 
 permissions:
   contents: read
@@ -13,71 +12,36 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
-
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout Code
         uses: actions/checkout@v4
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: stable
-          cache: true
+          channel: 'stable'
 
-      - name: Verify source
-        run: |
-          grep -n "PortfolioApp" lib/main.dart
-          grep -n "Numaan Qureshi" lib/main.dart
-
-      - name: Install dependencies
+      - name: Install Dependencies
         run: flutter pub get
 
-      - name: Build Flutter Web
-        run: |
-          flutter clean
-          flutter pub get
-          flutter build web --release --base-href "/"
+      - name: Build Web App
+        run: flutter build web --release --base-href "/NumaanQureshi.github.io/"
 
-      - name: Verify build
-        run: |
-          echo "Build completed successfully."
-          echo "Build size:"
-          du -sh build/web
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
-          echo ""
-          echo "Build files:"
-          find build/web -maxdepth 2 -type f | sort
-
-          echo ""
-          echo "Checking required Flutter files..."
-
-          test -f build/web/index.html
-          test -f build/web/flutter_bootstrap.js
-          test -f build/web/main.dart.js
-          test -f build/web/manifest.json
-
-          echo "✓ Required build files exist."
-
-          echo ""
-          echo "Checking base href:"
-          grep '<base href="/">' build/web/index.html
-
-          echo ""
-          echo "✓ Flutter web build is valid."
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v4
+      - name: Upload Artifacts
+        uses: actions/upload-pages-artifact@v3
         with:
-          path: build/web
+          path: 'build/web'
 
       - name: Deploy to GitHub Pages
         id: deployment
