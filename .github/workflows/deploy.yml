@@ -33,7 +33,7 @@ jobs:
         run: flutter pub get
 
       - name: Build Web App
-        run: flutter build web --release --base-href "/NumaanQureshi.github.io/"
+        run: flutter build web --release --base-href "/"
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
