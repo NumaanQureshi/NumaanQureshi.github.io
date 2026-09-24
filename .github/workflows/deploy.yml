@@ -28,7 +28,7 @@ jobs:
           channel: 'stable'
 
       - name: Build Web
-        run: flutter build web --base-href "/${{ github.event.repository.name }}/" --release
+        run: flutter build web --base-href "/" --release
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
