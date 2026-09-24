@@ -1,50 +1,25 @@
 name: Flutter Web Deployment for GitHub Pages
-
 on:
   push:
     branches:
       - main
   workflow_dispatch:
-
 permissions:
   contents: read
   pages: write
   id-token: write
-
 concurrency:
   group: "pages"
   cancel-in-progress: true
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Debug Git information
-        run: |
-          echo "========================================"
-          echo "GitHub Actions Debug Information"
-          echo "========================================"
-          echo "Repository:"
-          git remote -v
-          echo ""
-          echo "Branch:"
-          git branch --show-current
-          echo ""
-          echo "Commit:"
-          git rev-parse HEAD
-          echo ""
-          echo "Commit details:"
-          git log -1 --oneline --decorate
-          echo ""
-          echo "Working tree:"
-          git status --short
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -52,67 +27,81 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Debug Flutter environment
+      - name: Show environment
         run: |
-          echo "========================================"
-          echo "Flutter Environment"
-          echo "========================================"
+          echo "Flutter:"
           flutter --version
-          dart --version
 
-      - name: Debug Flutter project
+          echo ""
+          echo "Git commit:"
+          git rev-parse HEAD
+
+          echo ""
+          echo "Git commit message:"
+          git log -1 --oneline
+
+      - name: Verify source
         run: |
-          echo "========================================"
-          echo "Flutter Project"
-          echo "========================================"
+          echo "=== main.dart ==="
+          grep -n "PortfolioApp" lib/main.dart
+          grep -n "Numaan Qureshi" lib/main.dart
+
           echo ""
-          echo "Repository root:"
-          pwd
-          echo ""
-          echo "Root directory:"
-          ls -la
-          echo ""
-          echo "pubspec.yaml:"
-          sed -n '1,160p' pubspec.yaml
-          echo ""
-          echo "lib/main.dart:"
-          sed -n '1,240p' lib/main.dart
+          echo "=== Project files ==="
+          find . -maxdepth 2 -type f | sort
 
       - name: Install dependencies
         run: flutter pub get
 
       - name: Build Flutter Web
-        run: flutter build web --release --base-href "/"
+        run: |
+          flutter clean
+          flutter pub get
+          flutter build web --release --base-href "/"
 
-      - name: Debug build output
+      - name: VERIFY BUILD IS OUR APP
         run: |
           echo "========================================"
-          echo "Flutter Web Build Output"
+          echo "VERIFYING COMPILED APPLICATION"
           echo "========================================"
+
           echo ""
-          echo "build/web contents:"
+          echo "Build files:"
           find build/web -maxdepth 2 -type f | sort
+
           echo ""
-          echo "Build directory size:"
+          echo "Build size:"
           du -sh build/web
+
           echo ""
-          echo "index.html:"
-          sed -n '1,240p' build/web/index.html
+          echo "Checking index.html:"
+          sed -n '1,120p' build/web/index.html
+
           echo ""
-          echo "Checking for Flutter bootstrap files:"
-          if [ -f "build/web/flutter_bootstrap.js" ]; then
-            echo "✓ flutter_bootstrap.js exists"
+          echo "Searching compiled files for portfolio text..."
+
+          if grep -R -a -l "Numaan Qureshi" build/web > /tmp/matches.txt; then
+            echo "✓ FOUND 'Numaan Qureshi' in compiled web files:"
+            cat /tmp/matches.txt
           else
-            echo "⚠ flutter_bootstrap.js NOT found"
+            echo "❌ ERROR: 'Numaan Qureshi' was NOT found in build/web"
+            echo ""
+            echo "The Flutter build does not appear to contain the portfolio."
+            exit 1
           fi
-          if [ -d "build/web/assets" ]; then
-            echo "✓ assets directory exists"
+
+          echo ""
+          echo "Searching for default Flutter counter text..."
+
+          if grep -R -a -l "Flutter Demo Home Page" build/web > /tmp/demo.txt; then
+            echo "⚠ WARNING: Default Flutter demo text found:"
+            cat /tmp/demo.txt
           else
-            echo "⚠ assets directory NOT found"
+            echo "✓ Default Flutter demo text NOT found."
           fi
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: build/web
 
