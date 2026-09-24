@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 
 void main() {
   runApp(const PortfolioApp());
@@ -48,6 +49,8 @@ class _PortfolioHomePageState extends State<PortfolioHomePage> {
   final GlobalKey _projectsKey = GlobalKey();
   final GlobalKey _aboutKey = GlobalKey();
 
+  late ScrollController _scrollController; 
+
   final List<Map<String, String>> _projects = [
     {
       'name': 'Journey - Al-Assisted Fitness Tracking App',
@@ -58,6 +61,18 @@ class _PortfolioHomePageState extends State<PortfolioHomePage> {
       'image': 'assets/images/pwvault_logo.png',
     },
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   void _scrollToSection(GlobalKey key) {
     if (key.currentContext != null) {
@@ -110,15 +125,21 @@ class _PortfolioHomePageState extends State<PortfolioHomePage> {
           const SizedBox(width: 20),
         ],
       ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          children: [
-            Container(key: _heroKey, child: _buildHeroSection(context)),
-            Container(key: _projectsKey, child: _buildProjectsSection(context)),
-            Container(key: _aboutKey, child: _buildAboutSection(context)),
-            _buildFooter(context),
-          ],
+      body: WebSmoothScroll(
+        controller: _scrollController,
+        scrollAnimationLength: 1000,
+        curve: Curves.easeOutQuart,
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          physics: const NeverScrollableScrollPhysics(),
+          child: Column(
+            children: [
+              Container(key: _heroKey, child: _buildHeroSection(context)),
+              Container(key: _projectsKey, child: _buildProjectsSection(context)),
+              Container(key: _aboutKey, child: _buildAboutSection(context)),
+              _buildFooter(context),
+            ],
+          ),
         ),
       ),
     );
