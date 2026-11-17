@@ -7,12 +7,14 @@ class SocialLink extends StatelessWidget {
   final String iconPath;
   final String label;
   final String url;
+  final bool tintIcon;
 
   const SocialLink({
     super.key,
     required this.iconPath,
     required this.label,
     required this.url,
+    this.tintIcon = true,
   });
 
   @override
@@ -20,8 +22,9 @@ class SocialLink extends StatelessWidget {
     return InkWell(
       onTap: () => launchExternalUrl(url),
       borderRadius: BorderRadius.circular(8),
+      hoverColor: const Color(0xFF34D399).withValues(alpha: 0.1),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -29,6 +32,9 @@ class SocialLink extends StatelessWidget {
               iconPath,
               width: 20,
               height: 20,
+              colorFilter: tintIcon
+                  ? const ColorFilter.mode(Color(0xFFD1D5DB), BlendMode.srcIn)
+                  : null,
             ),
             const SizedBox(width: 8),
             Text(
@@ -36,7 +42,7 @@ class SocialLink extends StatelessWidget {
               style: GoogleFonts.inter(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
-                color: Colors.black87,
+                color: const Color(0xFFD1D5DB),
               ),
             ),
           ],
