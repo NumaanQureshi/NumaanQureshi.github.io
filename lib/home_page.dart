@@ -71,8 +71,12 @@ class _PortfolioHomePageState extends State<PortfolioHomePage> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.grey[200]!.withValues(alpha: 0.7),
+        backgroundColor: const Color(0xFF07070A).withValues(alpha: 0.65),
         elevation: 0,
+        scrolledUnderElevation: 0,
+        shape: Border(
+          bottom: BorderSide(color: const Color(0xFFFFFFFF).withValues(alpha: 0.06), width: 1),
+        ),
         flexibleSpace: ClipRect(
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
@@ -130,7 +134,8 @@ class _NavButton extends StatelessWidget {
       child: TextButton(
         onPressed: onPressed,
         style: TextButton.styleFrom(
-          foregroundColor: Colors.black87,
+          foregroundColor: const Color(0xFFE5E7EB),
+          overlayColor: const Color(0xFF34D399).withValues(alpha: 0.12),
           textStyle: GoogleFonts.inter(
             fontSize: 14,
             fontWeight: FontWeight.w500,
