@@ -18,20 +18,23 @@ dependencies:
   url_launcher: ^6.3.2
   flutter_svg: ^2.3.0
   web_smooth_scroll: ^2.0.0
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^6.0.0
-
-
-# The following section is specific to Flutter packages.
+  flutter_launcher_icons: ^0.9.3
 flutter:
 
   uses-material-design: true
 
   assets:
     - assets/images/
+
+flutter_icons:
+  image_path: "assets/icon/app_icon.png"
+  android: false
+  ios: false
+  web: true
 
   # fonts:
