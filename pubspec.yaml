@@ -1,5 +1,5 @@
 name: mysite
-description: "A new Flutter project."
+description: "Online Portfolio"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -24,13 +24,13 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^6.0.0
-  flutter_launcher_icons: ^0.9.3
 flutter:
 
   uses-material-design: true
 
   assets:
     - assets/images/
+    - assets/icon/
 
 flutter_icons:
   image_path: "assets/icon/app_icon.png"
