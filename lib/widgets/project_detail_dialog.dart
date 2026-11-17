@@ -8,7 +8,7 @@ void showProjectDetailDialog(BuildContext context, Project project) {
     context: context,
     barrierDismissible: true,
     barrierLabel: 'Dismiss project details',
-    barrierColor: Colors.black.withValues(alpha: 0.55),
+    barrierColor: Colors.black.withValues(alpha: 0.75),
     transitionDuration: const Duration(milliseconds: 280),
     pageBuilder: (context, animation, secondaryAnimation) {
       return Center(
@@ -41,9 +41,12 @@ class ProjectDetailDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFF181B22),
       surfaceTintColor: Colors.transparent,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: const BorderSide(color: Colors.white12),
+      ),
       insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
       clipBehavior: Clip.antiAlias,
       child: ConstrainedBox(
@@ -52,7 +55,6 @@ class ProjectDetailDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             // banner
             Stack(
               children: [
@@ -60,7 +62,7 @@ class ProjectDetailDialog extends StatelessWidget {
                   width: double.infinity,
                   height: 220,
                   padding: const EdgeInsets.all(32.0),
-                  color: const Color(0xFFEEEEEE),
+                  color: const Color(0xFF12141A),
                   child: Image.asset(
                     project.image,
                     fit: BoxFit.contain,
@@ -68,7 +70,7 @@ class ProjectDetailDialog extends StatelessWidget {
                       child: Icon(
                         Icons.image_outlined,
                         size: 48,
-                        color: Colors.black26,
+                        color: Colors.white24,
                       ),
                     ),
                   ),
@@ -80,8 +82,8 @@ class ProjectDetailDialog extends StatelessWidget {
                   child: IconButton(
                     onPressed: () => Navigator.of(context).pop(),
                     style: IconButton.styleFrom(
-                      backgroundColor: Colors.white.withValues(alpha: 0.85),
-                      foregroundColor: Colors.black87,
+                      backgroundColor: const Color(0xFF222630).withValues(alpha: 0.9),
+                      foregroundColor: const Color(0xFFF3F4F6),
                     ),
                     icon: const Icon(Icons.close, size: 20),
                     tooltip: 'Close',
@@ -102,7 +104,7 @@ class ProjectDetailDialog extends StatelessWidget {
                       style: GoogleFonts.inter(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: const Color(0xFFF3F4F6),
                         letterSpacing: -0.5,
                       ),
                     ),
@@ -117,16 +119,18 @@ class ProjectDetailDialog extends StatelessWidget {
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF0F0F0),
+                            color: const Color(0xFF34D399).withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(4),
-                            border: Border.all(color: Colors.black12),
+                            border: Border.all(
+                              color: const Color(0xFF34D399).withValues(alpha: 0.3),
+                            ),
                           ),
                           child: Text(
                             tech,
                             style: GoogleFonts.inter(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
-                              color: Colors.black87,
+                              color: const Color(0xFF34D399),
                             ),
                           ),
                         );
@@ -137,7 +141,7 @@ class ProjectDetailDialog extends StatelessWidget {
                       project.description,
                       style: GoogleFonts.inter(
                         fontSize: 16,
-                        color: Colors.black87,
+                        color: const Color(0xFFD1D5DB),
                         height: 1.6,
                       ),
                     ),
@@ -149,8 +153,8 @@ class ProjectDetailDialog extends StatelessWidget {
                             onPressed: () =>
                                 launchExternalUrl(project.githubUrl!),
                             style: FilledButton.styleFrom(
-                              backgroundColor: Colors.black,
-                              foregroundColor: Colors.white,
+                              backgroundColor: const Color(0xFF34D399),
+                              foregroundColor: const Color(0xFF0F1115),
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 20,
                                 vertical: 14,
