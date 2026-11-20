@@ -96,8 +96,8 @@ class HeroSection extends StatelessWidget {
                   children: [
                     SocialLink(
                       iconPath: 'assets/images/email.svg',
-                      label: 'numaanqureshi05@gmail.com',
-                      url: 'mailto:numaanqureshi05@gmail.com',
+                      label: 'numaan1@hotmail.com',
+                      url: 'mailto:numaan1@hotmail.com',
                       tintIcon: true,
                     ),
                     SocialLink(
