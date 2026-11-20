@@ -6,6 +6,7 @@ import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 
 import 'sections/hero_section.dart';
 import 'sections/projects_section.dart';
+import 'sections/skills_section.dart';
 import 'sections/about_section.dart';
 import 'sections/footer_section.dart';
 import 'utils/url_helper.dart';
@@ -20,6 +21,7 @@ class PortfolioHomePage extends StatefulWidget {
 class _PortfolioHomePageState extends State<PortfolioHomePage> {
   final GlobalKey _heroKey = GlobalKey();
   final GlobalKey _projectsKey = GlobalKey();
+  final GlobalKey _skillsKey = GlobalKey();
   final GlobalKey _aboutKey = GlobalKey();
 
   late final ScrollController _scrollController;
@@ -62,6 +64,7 @@ class _PortfolioHomePageState extends State<PortfolioHomePage> {
         children: [
           HeroSection(key: _heroKey),
           ProjectsSection(key: _projectsKey),
+          SkillsSection(key: _skillsKey),
           AboutSection(key: _aboutKey),
           const FooterSection(),
         ],
@@ -75,7 +78,10 @@ class _PortfolioHomePageState extends State<PortfolioHomePage> {
         elevation: 0,
         scrolledUnderElevation: 0,
         shape: Border(
-          bottom: BorderSide(color: const Color(0xFFFFFFFF).withValues(alpha: 0.06), width: 1),
+          bottom: BorderSide(
+            color: const Color(0xFFFFFFFF).withValues(alpha: 0.06),
+            width: 1,
+          ),
         ),
         flexibleSpace: ClipRect(
           child: BackdropFilter(
@@ -101,6 +107,10 @@ class _PortfolioHomePageState extends State<PortfolioHomePage> {
           _NavButton(
             title: 'Work',
             onPressed: () => _scrollToSection(_projectsKey),
+          ),
+          _NavButton(
+            title: 'Skills',
+            onPressed: () => _scrollToSection(_skillsKey),
           ),
           _NavButton(
             title: 'About',
